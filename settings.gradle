@@ -1,0 +1,2 @@
+include ':app', ':ZSDK_ANDROID_API', ':jackson-annotations-2.2.3', ':jackson-core-2.2.3', ':jackson-databind-2.2.3'
+rootProject.name='ZebraPDFPrintV2'

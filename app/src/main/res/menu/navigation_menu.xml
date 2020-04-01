@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+  <group
+    android:id="@+id/home_group">
+
+    <item
+      android:title="Info">
+
+      <menu>
+
+        <group>
+
+          <item
+            android:id="@+id/home"
+            android:title="Home"/>
+
+          <item
+            android:id="@+id/home_savanna_get_started"
+            android:title="Getting Started"/>
+
+          <item
+            android:id="@+id/home_developer_portal"
+            android:title="Developer Portal"/>
+
+        </group>
+
+      </menu>
+
+    </item>
+
+  </group>
+
+  <group
+    android:id="@+id/barcode_intelligence_group">
+
+    <item
+      android:title="Barcode Intelligence API's">
+
+      <menu>
+
+        <group>
+
+          <item
+            android:id="@+id/create_barcode"
+            android:title="Create Barcode"/>
+
+          <item
+            android:id="@+id/upc_lookup"
+            android:title="UPC Lookup"/>
+
+        </group>
+
+      </menu>
+
+    </item>
+
+  </group>
+
+  <group
+    android:id="@+id/fda_recall_group">
+
+    <item
+      android:title="FDA Recall API's">
+
+      <menu>
+
+        <group>
+
+          <item
+            android:id="@+id/get_food_recall_upc"
+            android:title="Food Recall (by UPC)"/>
+
+          <item
+            android:id="@+id/get_drug_recall_upc"
+            android:title="Drug Recall (By UPC)"
+            android:enabled="false"/>
+
+          <item
+            android:id="@+id/get_drug_recall_description"
+            android:title="Drug Recall (By Description)"
+            android:enabled="false"/>
+
+          <item
+            android:id="@+id/get_device_recall_description"
+            android:title="Device Recall (By Description)"
+            android:enabled="false"/>
+
+        </group>
+
+      </menu>
+
+    </item>
+
+  </group>
+
+  <group
+    android:id="@+id/printer_group">
+
+    <item android:title="Print API's">
+
+      <menu>
+
+        <group>
+
+          <item
+            android:id="@+id/get_all_printers"
+            android:title="Get All Printers"/>
+
+          <item
+            android:id="@+id/get_printer_details"
+            android:title="Get Printer Details"/>
+
+          <item
+            android:id="@+id/get_printer_odometer"
+            android:title="Get Printer Odometer"
+            android:enabled="false"/>
+
+          <item
+            android:id="@+id/send_print_job"
+            android:title="Send Print Job" />
+
+        </group>
+
+      </menu>
+
+    </item>
+
+  </group>
+
+</menu>

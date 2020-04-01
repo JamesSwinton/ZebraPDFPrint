@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  tools:context=".MainActivity">
+
+  <RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:orientation="vertical">
+
+      <!-- Toolbar View -->
+      <include layout="@layout/layout_toolbar"
+        android:id="@+id/toolbar_layout"/>
+
+      <!-- Printer Status View -->
+      <include layout="@layout/layout_printer_connection_status"
+        android:id="@+id/printer_status_layout"/>
+
+      <!-- PDF View -->
+      <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/pdf_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="9"
+        android:layout_margin="8dp"/>
+
+      <!-- Print PDF -->
+      <Button
+        style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+        android:id="@+id/print_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:text="PRINT PDF"
+        android:textSize="10pt"
+        app:backgroundTint="@color/colorAccent"/>
+
+    </LinearLayout>
+
+  </RelativeLayout>
+
+</layout>

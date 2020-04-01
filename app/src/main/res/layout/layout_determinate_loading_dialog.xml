@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools">
+
+  <LinearLayout
+    android:id="@+id/base_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="4dp"
+    android:orientation="vertical">
+
+    <TextView
+      android:id="@+id/dialog_title"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:textStyle="bold"
+      android:textSize="10pt"
+      android:layout_margin="4dp"
+      tools:text="Printing PDF 1 of 2"/>
+
+    <ProgressBar
+      style="@android:style/Widget.ProgressBar.Horizontal"
+      android:id="@+id/progress_bar"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="4dp"
+      android:layout_marginEnd="4dp"
+      android:progressDrawable="@drawable/material_progress_bar"/>
+
+    <TextView
+      android:id="@+id/bytes_written"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:textStyle="italic"
+      android:layout_marginStart="4dp"
+      android:layout_marginEnd="4dp"
+      tools:text="Transferred 324237 of 543075 bytes"/>
+
+  </LinearLayout>
+</layout>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
+  tools:context=".MainActivity">
+
+  <LinearLayout
+    android:id="@+id/base_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!-- Toolbar View -->
+    <include layout="@layout/layout_toolbar"
+      android:id="@+id/toolbar_layout"/>
+
+    <ImageView
+      android:layout_width="match_parent"
+      android:layout_height="0dp"
+      android:layout_weight="8"
+      android:layout_margin="8dp"
+      android:src="@drawable/ic_select_pdf"
+      android:tint="@color/light_grey"
+      tools:ignore="ContentDescription" />
+
+    <TextView
+      android:layout_width="match_parent"
+      android:layout_height="0dp"
+      android:layout_weight="2"
+      android:layout_margin="8dp"
+      android:gravity="center"
+      android:textStyle="bold"
+      android:textSize="14pt"
+      android:text="@string/select_pdf_for_printing" />
+
+  </LinearLayout>
+</layout>
