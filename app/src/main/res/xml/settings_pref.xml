@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto">
+
+  <PreferenceCategory
+    app:title="Printer Settings"
+    app:iconSpaceReserved="false">
+
+    <EditTextPreference
+      app:key="pdf_print_scale_pref"
+      app:title="ZPL Scale Command"
+      app:icon="@drawable/ic_scale"
+      app:defaultValue="dither scale-to-fit"
+      app:summary="ZPL Command to adjust printer scale"
+      app:useSimpleSummaryProvider="true"/>
+
+  </PreferenceCategory>
+</PreferenceScreen>
