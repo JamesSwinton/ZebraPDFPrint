@@ -5,16 +5,15 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -42,7 +41,6 @@ import com.zebra.jamesswinton.zebrapdfprintv2.interfaces.OnSelectPrinterCallback
 import com.zebra.jamesswinton.zebrapdfprintv2.utilities.CustomDialog;
 import com.zebra.jamesswinton.zebrapdfprintv2.utilities.FileHelper;
 import com.zebra.sdk.comm.Connection;
-import com.zebra.sdk.comm.ConnectionException;
 import com.zebra.sdk.printer.discovery.DiscoveredPrinter;
 
 import java.io.File;
@@ -178,7 +176,7 @@ public class ViewPDFActivity extends AppCompatActivity implements OnSelectPrinte
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.toolbar_menu, menu);
+        getMenuInflater().inflate(R.menu.view_pdf_toolbar_menu, menu);
         return true;
     }
 
@@ -224,8 +222,14 @@ public class ViewPDFActivity extends AppCompatActivity implements OnSelectPrinte
                     // Show Dialog
                     progressDialog.show();
 
+                    // Get Scale & Additional ZPL Shared Pref
+                    SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+                    String scaleCommand = sharedPreferences.getString("pdf_print_scale_pref", "");
+                    String additionalZpl = sharedPreferences.getString("additional_zpl_pref", "");
+
                     // Init Print
-                    new SendPDFToPrinterAsync(mPrinterConnection, mPDFFile, quantity, new OnPrintStatusCallback() {
+                    new SendPDFToPrinterAsync(mPrinterConnection, mPDFFile, quantity, scaleCommand,
+                            additionalZpl, new OnPrintStatusCallback() {
                         @Override
                         public void onPrintComplete() {
                             progressDialog.dismiss();

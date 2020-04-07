@@ -2,4 +2,7 @@
   <string name="app_name">Zebra PDF Print</string>
   <string name="select_pdf_for_printing">TAP TO SELECT A PDF FOR PRINTING</string>
   <string name="bytes">Written %1$d of %2$d bytes</string>
+
+  <!-- TODO: Remove or change this placeholder text -->
+  <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

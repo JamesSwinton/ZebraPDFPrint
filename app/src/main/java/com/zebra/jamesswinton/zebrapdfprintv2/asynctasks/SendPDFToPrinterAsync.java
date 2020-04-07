@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,6 +43,8 @@ public class SendPDFToPrinterAsync extends AsyncTask<Void, Void, Void> {
     // Private Variables
     private int mQuantity;
     private File mPDFFile;
+    private String mScaleCommand;
+    private String mAdditionalZpl;
     private Connection mPrinterConnection;
     private OnPrintStatusCallback mOnPrintStatusCallback;
 
@@ -49,9 +52,12 @@ public class SendPDFToPrinterAsync extends AsyncTask<Void, Void, Void> {
 
 
     public SendPDFToPrinterAsync(Connection printerConnection, File pdfFile, int quantity,
+                                 String scaleCommand, String additionalZpl,
                                  OnPrintStatusCallback onPrintStatusCallback) {
         this.mPDFFile = pdfFile;
         this.mQuantity = quantity;
+        this.mScaleCommand = scaleCommand;
+        this.mAdditionalZpl = additionalZpl;
         this.mPrinterConnection = printerConnection;
         this.mOnPrintStatusCallback = onPrintStatusCallback;
     }
@@ -70,9 +76,15 @@ public class SendPDFToPrinterAsync extends AsyncTask<Void, Void, Void> {
             // Verify Printer Status is Ready
             PrinterStatus printerStatus = printer.getCurrentStatus();
             if (printerStatus.isReadyToPrint) {
+                // Send Additional ZPL
+                if (mAdditionalZpl != null && !TextUtils.isEmpty(mAdditionalZpl)) {
+                    printer.sendCommand(mAdditionalZpl);
+                }
+
                 // Scale Printer for First Print
-                String scaleCommand = getPrinterScaleCommand(mPrinterConnection);
-                SGD.SET("apl.settings", scaleCommand, mPrinterConnection);
+                if (mScaleCommand != null && !TextUtils.isEmpty(mScaleCommand)) {
+                    SGD.SET("apl.settings", mScaleCommand, mPrinterConnection);
+                }
 
                 // Loop Quantity
                 for (int i = 0; i < mQuantity; i++) {
@@ -107,7 +119,7 @@ public class SendPDFToPrinterAsync extends AsyncTask<Void, Void, Void> {
                     }
                 });
             }
-        } catch (ConnectionException | InterruptedException | IOException e) {
+        } catch (ConnectionException | InterruptedException e) {
             // Pass Error Up
             mHandler.post(() -> mOnPrintStatusCallback.onPrintError(e.getMessage()));
         } finally {

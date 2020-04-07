@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  tools:context=".MainActivity">
+
+  <LinearLayout
+    android:id="@+id/base_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!-- Toolbar View -->
+    <include layout="@layout/layout_toolbar"
+      android:id="@+id/toolbar_layout"/>
+
+    <FrameLayout
+      android:id="@+id/fragment_holder"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"/>
+
+  </LinearLayout>
+</layout>
