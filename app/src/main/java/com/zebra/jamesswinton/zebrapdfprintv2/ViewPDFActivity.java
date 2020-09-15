@@ -54,6 +54,7 @@ public class ViewPDFActivity extends AppCompatActivity implements OnSelectPrinte
 
     // Constants
     private static final int SELECT_PDF_INTENT = 100;
+    private static final String FILE_PATH_QUERY_PARAM_KEY = "file-path";
     private static final String DEFAULT_SHARED_PREFS = "default-shared-prefs";
     private static final String PRINTER_MAC_PREF = "printer-mac-pref";
 
@@ -88,7 +89,21 @@ public class ViewPDFActivity extends AppCompatActivity implements OnSelectPrinte
         // Handle PDF Uri
         Intent viewPdfIntent = getIntent();
         if (viewPdfIntent != null && viewPdfIntent.getData() != null) {
-            processPdf(viewPdfIntent.getData());
+            // Check if launched from Browser
+            Uri pdfUri = viewPdfIntent.getData();
+            if (viewPdfIntent.getData().getQueryParameter(FILE_PATH_QUERY_PARAM_KEY) != null) {
+                File pdfFle = new File(viewPdfIntent.getData()
+                        .getQueryParameter(FILE_PATH_QUERY_PARAM_KEY));
+                if (pdfFle.exists()) {
+                    pdfUri = Uri.fromFile(pdfFle);
+                } else {
+                    Log.e(TAG, "No PDF File found at path: " + pdfFle.getAbsolutePath());
+                    Toast.makeText(this, "Could not get PDF File at path: "
+                            + pdfFle.getAbsolutePath(), Toast.LENGTH_LONG).show();
+                    return;
+                }
+            }
+            processPdf(pdfUri);
         } else {
             Log.e(TAG, "No PDF URI Provided, exiting");
             Toast.makeText(this, "Could not get PDF File", Toast.LENGTH_LONG).show();

@@ -7,8 +7,8 @@ android {
         applicationId "com.zebra.jamesswinton.zebrapdfprintv2"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 9
-        versionName "6.0"
+        versionCode 10
+        versionName "7.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
