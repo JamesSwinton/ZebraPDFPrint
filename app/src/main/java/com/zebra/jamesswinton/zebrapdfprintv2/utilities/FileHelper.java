@@ -5,11 +5,16 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.util.Base64;
+import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -91,6 +96,36 @@ public class FileHelper {
         }
 
         return path;
+    }
+
+    public static File getFileFromBase64(Context cx, String pdfBase64) throws IOException {
+        byte[] imgBytesData = Base64.decode(pdfBase64, Base64.DEFAULT);
+        File file = File.createTempFile("pdf-to-print" + System.currentTimeMillis(), ".pdf", cx.getCacheDir());
+        try (BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(new FileOutputStream(file))) {
+            bufferedOutputStream.write(imgBytesData);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        return file;
+    }
+
+    public static Uri getUriFromBase64(Context cx, String base64) {
+        try {
+            File pdfFle = FileHelper.getFileFromBase64(cx, base64);
+            if (pdfFle != null && pdfFle.exists()) {
+                return Uri.fromFile(pdfFle);
+            } else {
+                Log.e(TAG, "No PDF File found at path: " + pdfFle.getAbsolutePath());
+                Toast.makeText(cx, "Could not get PDF File at path: "
+                        + pdfFle.getAbsolutePath(), Toast.LENGTH_LONG).show();
+                return null;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
 }

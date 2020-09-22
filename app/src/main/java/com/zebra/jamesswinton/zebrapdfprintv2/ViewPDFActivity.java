@@ -15,6 +15,7 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -44,6 +45,7 @@ import com.zebra.sdk.comm.Connection;
 import com.zebra.sdk.printer.discovery.DiscoveredPrinter;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.List;
 
@@ -55,6 +57,7 @@ public class ViewPDFActivity extends AppCompatActivity implements OnSelectPrinte
     // Constants
     private static final int SELECT_PDF_INTENT = 100;
     private static final String FILE_PATH_QUERY_PARAM_KEY = "file-path";
+    private static final String FILE_BASE64_QUERY_PARAM_KEY = "file-base64";
     private static final String DEFAULT_SHARED_PREFS = "default-shared-prefs";
     private static final String PRINTER_MAC_PREF = "printer-mac-pref";
 
@@ -100,6 +103,15 @@ public class ViewPDFActivity extends AppCompatActivity implements OnSelectPrinte
                     Log.e(TAG, "No PDF File found at path: " + pdfFle.getAbsolutePath());
                     Toast.makeText(this, "Could not get PDF File at path: "
                             + pdfFle.getAbsolutePath(), Toast.LENGTH_LONG).show();
+                    return;
+                }
+            } else if (viewPdfIntent.getData().getQueryParameter(FILE_BASE64_QUERY_PARAM_KEY) != null) {
+                String base64 = viewPdfIntent.getData().getQueryParameter(FILE_BASE64_QUERY_PARAM_KEY);
+                String base64Reformatted = base64.replace(" ", "+");
+                Uri uri = FileHelper.getUriFromBase64(this, base64Reformatted);
+                if (uri != null) {
+                    pdfUri = uri;
+                } else {
                     return;
                 }
             }
