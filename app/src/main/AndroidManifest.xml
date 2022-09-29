@@ -1,62 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:tools="http://schemas.android.com/tools"
-  package="com.zebra.jamesswinton.zebrapdfprintv2">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.zebra.jamesswinton.zebrapdfprintv2">
 
-  <!-- Bluetooth Permissions -->
-  <uses-permission android:name="android.permission.BLUETOOTH" />
-  <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-  <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-  <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <!-- Bluetooth Permissions -->
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
-  <application
-    android:allowBackup="false"
-    android:icon="@mipmap/ic_launcher"
-    android:label="@string/app_name"
-    android:roundIcon="@mipmap/ic_launcher_round"
-    android:supportsRtl="true"
-    android:theme="@style/AppTheme"
-    android:requestLegacyExternalStorage="true"
-    tools:ignore="GoogleAppIndexingWarning">
+    <application
+        android:allowBackup="false"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:requestLegacyExternalStorage="true"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"
+        tools:ignore="GoogleAppIndexingWarning">
 
-    <!-- Activities -->
-    <activity android:name=".MainActivity"
-      android:launchMode="singleTop">
-      <intent-filter>
-        <action android:name="android.intent.action.MAIN" />
-        <category android:name="android.intent.category.LAUNCHER" />
-      </intent-filter>
-    </activity>
+        <!-- Activities -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:launchMode="singleTop">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
-    <activity android:name=".ViewPDFActivity"
-      android:configChanges="orientation|screenSize|keyboardHidden"
-      android:launchMode="standard">
-      <intent-filter tools:ignore="AppLinkUrlError">
-        <action android:name="android.intent.action.VIEW" />
-        <category android:name="android.intent.category.DEFAULT" />
-        <data android:mimeType="application/pdf" />
-      </intent-filter>
-      <intent-filter>
-        <action android:name="android.intent.action.VIEW" />
-        <category android:name="android.intent.category.DEFAULT" />
-        <category android:name="android.intent.category.BROWSABLE" />
-        <data
-          android:host="zebrapdfprint"
-          android:scheme="uri" />
-      </intent-filter>
-      <meta-data
-        android:name="android.support.PARENT_ACTIVITY"
-        android:value=".MainActivity" />
-    </activity>
+        <activity
+            android:name=".ViewPDFActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:exported="true"
+            android:launchMode="standard">
 
-    <activity android:name=".SettingsActivity"
-      android:parentActivityName=".MainActivity">
-      <meta-data
-        android:name="android.support.PARENT_ACTIVITY"
-        android:value=".MainActivity" />
-    </activity>
+            <intent-filter tools:ignore="AppLinkUrlError">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="application/pdf" />
+            </intent-filter>
 
-  </application>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="zebrapdfprint"
+                    android:scheme="uri" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+
+        <activity
+            android:name=".SettingsActivity"
+            android:parentActivityName=".MainActivity">
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+
+    </application>
 
 </manifest>
