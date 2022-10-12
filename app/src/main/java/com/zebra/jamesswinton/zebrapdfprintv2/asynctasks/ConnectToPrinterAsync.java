@@ -10,6 +10,7 @@ import com.zebra.sdk.comm.BluetoothConnection;
 import com.zebra.sdk.comm.Connection;
 import com.zebra.sdk.comm.ConnectionException;
 import com.zebra.sdk.printer.SGD;
+import com.zebra.sdk.printer.discovery.DiscoveredPrinterUsb;
 
 public class ConnectToPrinterAsync extends AsyncTask<Void, Void, Void> {
 
@@ -20,22 +21,33 @@ public class ConnectToPrinterAsync extends AsyncTask<Void, Void, Void> {
     private static final Handler mHandler = new Handler(Looper.getMainLooper());
 
     // Private Variables
-    private String mPrinterToConnectToMACAddress = null;
+    private String mPrinterToConnectAddress = null;
+    private DiscoveredPrinterUsb mDiscoveredPrinterUsb = null;
     private OnPrinterConnectedListener mOnPrinterConnectedListener = null;
-
-    // Public Variables
 
 
     public ConnectToPrinterAsync(String selectedPrinterMacAddress,
                                  OnPrinterConnectedListener onPrinterConnectedListener) {
-        this.mPrinterToConnectToMACAddress = selectedPrinterMacAddress;
+        this.mPrinterToConnectAddress = selectedPrinterMacAddress;
+        this.mOnPrinterConnectedListener = onPrinterConnectedListener;
+    }
+
+    public ConnectToPrinterAsync(DiscoveredPrinterUsb discoveredPrinterUsb,
+                                 OnPrinterConnectedListener onPrinterConnectedListener) {
+        this.mDiscoveredPrinterUsb = discoveredPrinterUsb;
+        this.mPrinterToConnectAddress = discoveredPrinterUsb.address;
         this.mOnPrinterConnectedListener = onPrinterConnectedListener;
     }
 
     @Override
     protected Void doInBackground(Void... params) {
         // Init Connection
-        Connection connection = new BluetoothConnection(mPrinterToConnectToMACAddress);
+        final Connection connection;
+        if (mDiscoveredPrinterUsb != null) {
+            connection = mDiscoveredPrinterUsb.getConnection();
+        } else {
+            connection = new BluetoothConnection(mPrinterToConnectAddress);
+        }
 
         try {
             // Open Connection
@@ -43,7 +55,7 @@ public class ConnectToPrinterAsync extends AsyncTask<Void, Void, Void> {
 
             // Verify Printer Supports PDF
             if (zebraPrinterSupportsPDF(connection)) {
-                mHandler.post(() -> mOnPrinterConnectedListener.onConnected(connection));
+                mHandler.post(() -> mOnPrinterConnectedListener.onConnected(connection, mPrinterToConnectAddress));
             } else {
                 mHandler.post(() -> mOnPrinterConnectedListener.onError(
                         "Printer does not support PDF Printing"));
