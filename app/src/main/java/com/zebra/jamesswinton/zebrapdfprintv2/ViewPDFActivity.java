@@ -34,11 +34,13 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.zebra.jamesswinton.zebrapdfprintv2.adapter.PDFBitmapAdapter;
 import com.zebra.jamesswinton.zebrapdfprintv2.asynctasks.ConnectToPrinterAsync;
 import com.zebra.jamesswinton.zebrapdfprintv2.asynctasks.DisconnectFromPrinterAsync;
+import com.zebra.jamesswinton.zebrapdfprintv2.asynctasks.PrinterUSBDiscoveryAsync;
 import com.zebra.jamesswinton.zebrapdfprintv2.asynctasks.ProcessPDFAsync;
 import com.zebra.jamesswinton.zebrapdfprintv2.asynctasks.SendPDFToPrinterAsync;
 import com.zebra.jamesswinton.zebrapdfprintv2.databinding.ActivityViewPdfBinding;
 import com.zebra.jamesswinton.zebrapdfprintv2.dialogfragments.PrintSettingsDialogFragment;
 import com.zebra.jamesswinton.zebrapdfprintv2.dialogfragments.SelectPrinterDialogFragment;
+import com.zebra.jamesswinton.zebrapdfprintv2.interfaces.OnDiscoveryUsbPrintersListener;
 import com.zebra.jamesswinton.zebrapdfprintv2.interfaces.OnPDFProcessedCallback;
 import com.zebra.jamesswinton.zebrapdfprintv2.interfaces.OnPrintStatusCallback;
 import com.zebra.jamesswinton.zebrapdfprintv2.interfaces.OnPrinterConnectedListener;
@@ -353,19 +355,7 @@ public class ViewPDFActivity extends AppCompatActivity implements OnSelectPrinte
     public void onDiscoveredPrinterUSBSelected(DiscoveredPrinterUsb discoveredPrinterUsb) {
         mSelectPrinterDialogFragment.dismiss();
 
-        final UsbManager mUsbManager = (UsbManager) getSystemService(Context.USB_SERVICE);
-        final PendingIntent mPermissionIntent = PendingIntent.getBroadcast(this, 0, new Intent(ACTION_USB_PERMISSION), 0);
-        final IntentFilter filter = new IntentFilter(ACTION_USB_PERMISSION);
-
-        registerReceiver(mUsbReceiver, filter);
-
-        mDiscoveredUsbPrinter = discoveredPrinterUsb;
-
-        if (mUsbManager.hasPermission(discoveredPrinterUsb.device)) {
-            connectToPrinter(discoveredPrinterUsb);
-        } else {
-            mUsbManager.requestPermission(discoveredPrinterUsb.device, mPermissionIntent);
-        }
+        checkUSBPrinterPermission(discoveredPrinterUsb);
     }
 
     @Override
@@ -459,6 +449,49 @@ public class ViewPDFActivity extends AppCompatActivity implements OnSelectPrinte
         }
     }
 
+    private void checkUSBPrinterPermission(DiscoveredPrinterUsb discoveredPrinterUsb) {
+        final UsbManager mUsbManager = (UsbManager) getSystemService(Context.USB_SERVICE);
+        final PendingIntent mPermissionIntent = PendingIntent.getBroadcast(this, 0, new Intent(ACTION_USB_PERMISSION), 0);
+        final IntentFilter filter = new IntentFilter(ACTION_USB_PERMISSION);
+
+        registerReceiver(mUsbReceiver, filter);
+
+        mDiscoveredUsbPrinter = discoveredPrinterUsb;
+
+        if (mUsbManager.hasPermission(discoveredPrinterUsb.device)) {
+            connectToPrinter(discoveredPrinterUsb);
+        } else {
+            mUsbManager.requestPermission(discoveredPrinterUsb.device, mPermissionIntent);
+        }
+    }
+
+    private void scanUSBPrinters() {
+        // Init USB Discovery
+        new PrinterUSBDiscoveryAsync(this, new OnDiscoveryUsbPrintersListener() {
+            @Override
+            public void onFinished(DiscoveredPrinterUsb discoveredPrinterUsb) {
+                Log.i(TAG, "Discovery finished");
+
+                // Verify If Printer was found
+                if (discoveredPrinterUsb == null) {
+                    CustomDialog.showCustomDialog(ViewPDFActivity.this, CustomDialog.DialogType.ERROR,
+                            "No Printer Found!", "");
+                } else {
+                    Log.i(TAG, "Discovered Printer: " + discoveredPrinterUsb.address);
+                    checkUSBPrinterPermission(discoveredPrinterUsb);
+                }
+            }
+
+            @Override
+            public void onError(String error) {
+                Log.i(TAG, error);
+
+                CustomDialog.showCustomDialog(ViewPDFActivity.this, CustomDialog.DialogType.ERROR,
+                        "Error while attempting to connect:", error);
+            }
+        }).execute();
+    }
+
     /**
      * PDF Handling
      */
@@ -496,6 +529,10 @@ public class ViewPDFActivity extends AppCompatActivity implements OnSelectPrinte
                 mPrinterMacAddress = mSharedPreferences.getString(PRINTER_MAC_PREF, null);
                 if (mPrinterMacAddress != null && (mPrinterConnection == null || !mPrinterConnection.isConnected())) {
                     Log.i(TAG, "Previous printer stored, attempting to connect");
+                    if (mPrinterMacAddress.startsWith("/dev/bus/usb")) {
+                        scanUSBPrinters();
+                        return;
+                    }
                     connectToPrinter(mPrinterMacAddress);
                 } else {
                     Log.i(TAG, "No default printer found");
